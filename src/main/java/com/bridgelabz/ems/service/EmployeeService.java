@@ -3,6 +3,7 @@ package com.bridgelabz.ems.service;
 import com.bridgelabz.ems.dto.EmployeeRequest;
 import com.bridgelabz.ems.dto.EmployeeResponse;
 import com.bridgelabz.ems.exception.EmployeeNotFoundByIdException;
+import com.bridgelabz.ems.exception.InvalidDepartmentException;
 import com.bridgelabz.ems.mapper.EmployeeMapper;
 import com.bridgelabz.ems.model.Address;
 import com.bridgelabz.ems.model.Employee;
@@ -66,6 +67,10 @@ public class EmployeeService {
 
 
     public List<EmployeeResponse> getEmployeesByDept(String dept) {
+        List<Employee> employees = employeeRepo.findByDeptContaining(dept);
+        if(employees.isEmpty()) {
+            throw new InvalidDepartmentException("Employees not found by department");
+        }
         return employeeRepo.findByDeptContaining(dept)
                 .stream().map(emp->{
                     emp.getAddresses().size();
